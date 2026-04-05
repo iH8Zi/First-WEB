@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@700&family=Amiri:wght@700&family=Cairo:wght@700&family=Changa:wght@700&family=El+Messiri:wght@700&family=Lemonada:wght@700&family=Readex+Pro:wght@700&family=Reem+Kufi:wght@700&family=Tajawal:wght@700&family=Aref+Ruqaa:wght@700&family=Kufam:wght@700&family=Bebas+Neue&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <title>Professional Lamp⚡</title>
+    <style>
+        :root { --main-color: #6a0dad; --font-family: 'Cairo', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        body { 
+            background: #000; overflow: hidden; height: 100vh;
+            font-family: var(--font-family); color: #fff;
+            user-select: none; -webkit-tap-highlight-color: transparent;
+        }
+
+        .particle { position: absolute; background: rgba(255, 0, 0, 0.15); width: 1.5px; height: 1.5px; border-radius: 50%;  animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(110vh); } }
+
+        .menu-btn { position: fixed; top: 20px; left: 20px; z-index: 1100; cursor: pointer; padding: 10px; }
+        .menu-btn span { display: block; width: 25px; height: 2px; background: #fff; margin: 5px 0; border-radius: 10px; }
+
+        .sidebar {
+            position: fixed; top: 0; left: -320px; width: 280px; height: 100%;
+            background: rgba(10, 10, 10, 0.98); border-right: 1px solid #222;
+            z-index: 1000; padding: 70px 15px; overflow-y: auto;
+        }
+        .sidebar.active { left: 0; }
+
+        /* 1. القائمة في الحالة العادية */
+.acc-content {
+    max-height: 0; /* مسكرة تماماً */
+    overflow: hidden;
+    display: grid; /* هي جاهزة كـ Grid */
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+    transition: max-height 0.3s ease-out; /* حركة فتح ناعمة */
+}
+
+/* 2. القائمة لما نكبس عليها وتفتح */
+.acc-item.active .acc-content {
+    max-height: 1000px; /* بتفتح كأنها سحاب */
+    padding: 10px;
+    margin-bottom: 10px;
+}
+        .acc-header { padding: 15px; cursor: pointer; background: #111; display: flex; justify-content: space-between; font-weight: bold; font-size: 0.85rem; color: var(--main-color); border-radius: 5px; }
+        
+
+.acc-content button {
+    width: 100%; /* عشان الزر ياخد مساحة المربع تبعه */
+    white-space: nowrap; /* بيمنع النص ينزل سطر جديد جوا الزر */
+    overflow: hidden;
+    text-overflow: ellipsis; /* لو النص طويل كتير بيحط نقط */
+    font-size: 0.9rem;
+}
+        .acc-content.open { max-height: 1000px; padding: 15px; }
+
+        .color-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+        .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 1px solid #333; }
+
+        .font-grid { display: grid; grid-template-columns: 1fr; gap: 5px; }
+        .font-btn { padding: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85rem; text-align: left; }
+
+        input { width: 100%; padding: 12px; margin-bottom: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none; }
+        button.save-btn { width: 100%; padding: 12px; background: var(--main-color); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; color: #fff; }
+
+        .lamp-container { position: absolute; top: 0; left: 50%; transform: translateX(-50%); transform-origin: top center; animation: swing 7s ease-in-out infinite; z-index: 5; }
+        @keyframes swing { 0%, 100% { transform: translateX(-50%) rotate(3deg); } 50% { transform: translateX(-50%) rotate(-3deg); } }
+        .cord { width: 1px; height: 100px; background: #444; margin: 0 auto; }
+        .lamp-head { width: 45px; height: 45px; background: #222; border-radius: 50%; cursor: pointer; border: 1px solid #333; position: relative; }
+        .lamp-head.on { 
+            background: var(--main-color); border-color: #fff;
+            box-shadow: 0 0 20px var(--main-color), 0 0 60px var(--main-color), 0 0 120px var(--main-color);
+        }
+        .lamp-head.on::after {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px; background: radial-gradient(circle, var(--main-color) 0%, transparent 70%);
+            opacity: 0.3; pointer-events: none; border-radius: 50%;
+        }
+
+        .content { text-align: center; z-index: 2; padding: 0 20px; margin-top: 180px; width: 100%; }
+        .quote-box { opacity: 0; transform: translateY(20px); transition: 0.8s; }
+        .quote-box.visible { opacity: 1; transform: translateY(0); }
+        .en { font-size: 1.5rem; color: var(--main-color); margin-bottom: 12px; display: block; font-weight: bold; }
+        .ar { font-size: 1.1rem; color: #ddd; display: block; line-height: 1.6; }
+
+        .about-text p { margin-bottom: 8px; font-weight: bold; }
+        .clr-1 { color: #00d4ff; } .clr-2 { color: #39ff14; } .clr-3 { color: #ff3131; }
+
+        .user-quote { 
+            background: #151515; padding: 12px; margin-bottom: 8px; border-radius: 5px; 
+            font-size: 0.8rem; cursor: pointer; border-right: 3px solid var(--main-color);
+            user-select: none; -webkit-touch-callout: none;
+        }
+
+        .footer { position: fixed; bottom: 15px; width: 100%; text-align: center; font-size: 9px; color: #333; letter-spacing: 2px; }
+        /* علامة الصح للألوان */
+.color-dot.selected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #fff !important;
+}
+.color-dot.selected::after {
+    content: '✓';
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    text-shadow: 0 0 3px #000;
+}
+
+/* علامة الصح للخطوط */
+.font-btn.selected::after {
+    content: ' ✓';
+    color: var(--main-color);
+    font-weight: bold;
+}
+/* ضيف هاد بس، ما تشيل شي قديم */
+.font-btn.selected::after {
+    content: ' ✓';
+    color: var(--main-color);
+    font-weight: bold;
+}
+/* علامة الصح للألوان */
+.color-dot.selected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ffffff; /* إطار أبيض خفيف */
+    transform: scale(1.1); /* تكبير بسيط للون المختار */
+}
+
+.color-dot.selected::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* عشان تكون خلف المحتوى */
+    pointer-events: none; /* عشان ما تمنعك من الضغط على الأزرار */
+}
+/* حاوية التواصل - النسخة الاحترافية */
+.fixed-contact {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0; /* مسافة فوق وتحت الدائرة */
+    margin-top: auto; /* هاد السحر: بيدفش الدائرة لآخر المنيو مهما كان طوله */
+    width: 100%;
+}
+
+.contact-circle {
+    width: 65px;
+    height: 65px;
+    background: var(--main-color, #ff4b2b);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 2px solid rgba(255,255,255,0.5);
+    transition: 0.3s ease;
+}
+
+.contact-circle:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.contact-circle:hover { transform: scale(1.1); }
+.contact-circle span { font-size: 18px; }
+.contact-circle p { font-size: 9px; margin: 0; font-weight: bold; }
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* عشان الـ auto margin يشتغل صح */
+    overflow-y: auto; /* عشان إذا طولت القائمة تقدر تعمل سكرول */
+}
+.designer-note {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+    
+    /* اللون الأزرق المتدرج: غامق من الأطراف وفاتح بالنص */
+    background: linear-gradient(to right, #001f3f, #3a86ff, #001f3f);
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    color: #1e3a8a; /* لغة احتياطية للمتصفحات القديمة جداً */
+    
+    opacity: 0.9; /* خليناها 0.9 عشان يبين أوضح شوي */
+    pointer-events: none;
+}
+.content {
+    cursor: pointer; /* بيخلي الماوس يصير إيد لما يمر فوق العبارة */
+}
+    </style>
+</head>
+<body onclick="handleGlobalClick()">
+<canvas id="bgCanvas"></canvas>
+<div class="menu-btn" onclick="toggleSidebar(event)">
+        <span></span><span></span><span></span>
+        
+    </div>
+
+    <div class="sidebar" id="sidebar" onclick="event.stopPropagation()">
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(event, this)">الألوان | COLORS 🎨 <span>+</span></div>
+            <div class="acc-content"><div class="color-grid" id="colorPicker"></div></div>
+        </div>
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(event, this)">الخطوط | FONTS 🖋️ <span>+</span></div>
+            <div class="acc-content">
+<div class="font-grid">
+   <button class="font-btn selected" onclick="changeFont('Cairo', this)">Cairo (الافتراضي ✨)</button>
+   <button class="font-btn" onclick="changeFont('Almarai', this)">Almarai (رسمي)</button>
+   <button class="font-btn" onclick="changeFont('Tajawal', this)">Tajawal (ناعم)</button>
+    <button class="font-btn" style="font-family: 'Readex Pro';" onclick="changeFont('Readex Pro', this)">Readex (هندسي)</button>
+    <button class="font-btn" style="font-family: 'El Messiri';" onclick="changeFont('El Messiri', this)">Messiri (جذاب)</button>
+    <button class="font-btn" style="font-family: 'Changa';" onclick="changeFont('Changa', this)">Changa (احترافي)</button>
+    <button class="font-btn" style="font-family: 'Lemonada';" onclick="changeFont('Lemonada', this)">Lemonada (فني)</button>
+    <button class="font-btn" style="font-family: 'Amiri';" onclick="changeFont('Amiri', this)">Amiri (كلاسيك)</button>
+    <button class="font-btn" style="font-family: 'Reem Kufi';" onclick="changeFont('Reem Kufi', this)">Reem Kufi (كوفي)</button>
+    <button class="font-btn" style="font-family: 'Aref Ruqaa';" onclick="changeFont('Aref Ruqaa', this)">Ruqaa (رقعة فخم)</button>
+    <button class="font-btn" style="font-family: 'Kufam';" onclick="changeFont('Kufam', this)">Kufam (عريض جداً)</button>
+    <button class="font-btn" style="font-family: 'Orbitron';" onclick="changeFont('Orbitron', this)">Orbitron (ديجيتال)</button>
+    <button class="font-btn" style="font-family: 'Bebas Neue';" onclick="changeFont('Bebas Neue', this)">Bebas (سينمائي)</button>
+    <button class="font-btn" style="font-family: 'Impact';" onclick="changeFont('Impact', this)">Impact (ضخم)</button>
+    <button class="font-btn" style="font-family: 'cursive';" onclick="changeFont('cursive', this)">Handwriting (يدوي)</button>
+</div>
+            </div>
+        </div>
+<div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(event, this)">تأثيرات الخلفية ✨<span>+</span></div>
+   <div class="acc-content">
+    <button class="font-btn selected" onclick="startEffect('none', this)">بدون تأثير</button>
+    <button class="font-btn" onclick="startEffect('red-dots', this)">نقاط حمراء 🔴</button>
+    <button class="font-btn" onclick="startEffect('stars', this)">نجوم سحرية ✨</button>
+    <button class="font-btn" onclick="startEffect('snow', this)">ثلج هادئ ❄️</button>
+    <button class="font-btn" onclick="startEffect('hearts', this)">قلوب حب ❤️</button>
+    <button class="font-btn" onclick="startEffect('bubbles', this)">فقاعات صاعدة 🫧</button>
+<p class="designer-note">فكرة إحدى المصممين</p>
+</div>
+<div class="acc-item">
+    <div class="acc-header" onclick="toggleAcc(event, this)">تصنيفات العبارات📂<span>+</span></div>
+<div class="acc-content categories-grid">
+        <button class="cat-btn" onclick="changeMood('default', this)">🏠 الافتراضي</button>
+    <button class="cat-btn" onclick="changeMood('sad', this)">🖤 حزن</button>
+    <button class="cat-btn" onclick="changeMood('happy', this)">😊 فرح</button>
+    <button class="cat-btn" onclick="changeMood('pride', this)">🦁 كبرياء</button>
+    <button class="cat-btn" onclick="changeMood('hopePhrases', this)">🕊️ أمل وطمأنينة</button>
+    <p style="color: mediumaquamarine; font-size: 9px; text-align: center; opacity: 0.7;">فكرة إحدى المصممين</p>
+</div>
+</div>
+</div>
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(event, this)">إضافة عبارة ➕ <span>+</span></div>
+            <div class="acc-content">
+                <input type="text" id="inEn" placeholder="English Text...">
+                <input type="text" id="inAr" placeholder="النص العربي...">
+                <input type="text" id="inEmoji" placeholder="Emoji ✨">
+                <button class="save-btn" onclick="addUserQuote()">SAVE</button>
+            </div>
+        </div>
+
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(event, this)">عباراتي 💾 <span>+</span></div>
+            <div class="acc-content" id="userQuotesList"></div>
+        </div>
+
+        <div class="acc-item">
+            <div class="acc-header" onclick="toggleAcc(event, this)">عني | ABOUT 👤 <span>+</span></div>
+            <div class="acc-content about-text">
+                <p class="clr-1">HAMZA × GEMINI 🚀</p>
+                <p class="clr-2">قريباً الكثير من مواقع الويب🔥...</p>
+                <p class="clr-1">Soon🔥...</p>
+                <p class="clr-3">Programmed by HAMZA©</p>
+            </div>
+        </div>
+        <div class="fixed-contact">
+    <a href="mailto:YOUR_EMAIL_HERE" class="contact-circle">
+        <span>📧</span>
+        <p>تواصل</p>
+    </a>
+</div>
+    </div>
+
+    <div class="lamp-container">
+        <div class="cord"></div>
+        <div class="lamp-head" id="lamp" onclick="toggleLamp(event)"></div>
+        
+    </div>
+
+    <div class="content">
+        <div class="quote-box" id="quoteBox">
+            <span class="en" id="enText">Believe in Your Vision</span>
+            <span class="ar" id="arText">آمن برؤيتك الخاصة ✨</span>
+        </div>
+    </div>
+</div>
+    <div class="footer">©HAMZA.2026</div>
+
+    <script>
+     const defaultQuotes = [
+            {en: "Success is not final, failure is not fatal.", ar: "النجاح ليس نهائياً، والفشل ليس قاتلاً. 🦅"},
+            {en: "Your limit is only your imagination.", ar: "حدودك هي فقط خيالك. 🌌"},
+            {en: "Push yourself, because no one else will do it.", ar: "ادفع نفسك، لأنه لن يفعل ذلك أحد غيرك. 💪"},
+            {en: "Great things never come from comfort zones.", ar: "الأشياء العظيمة لا تأتي من مناطق الراحة. 🏔️"},
+            {en: "Dream it. Wish it. Do it.", ar: "احلم به. تمنَّاه. نفذه. 🚀"},
+            {en: "Stay focused and never give up.", ar: "ابقَ مركزاً ولا تستسلم أبداً. 🎯"},
+            {en: "The harder you work, the luckier you get.", ar: "كلما عملت بجد، زاد حظك. 🍀"},
+            {en: "Don't stop when you're tired. Stop when you're done.", ar: "لا تتوقف عندما تتعب، توقف عندما تنتهي. 🔥"},
+            {en: "Wake up with determination. Go to bed with satisfaction.", ar: "استيقظ بعزيمة، ونم براضا. 🌅"},
+            {en: "Do something today that your future self will thank you for.", ar: "افعل شيئاً اليوم تشكرك عليه نفسك في المستقبل. ✨"},
+            {en: "Little things make big days.", ar: "الأشياء الصغيرة تصنع أياماً عظيمة. 🌱"},
+            {en: "It’s going to be hard, but hard does not mean impossible.", ar: "سيكون الأمر صعباً، لكن صعب لا تعني مستحيلاً. 💎"},
+            {en: "Don’t wait for opportunity. Create it.", ar: "لا تنتظر الفرصة، بل اصنعها بنفسك. 🛠️"},
+            {en: "Sometimes later becomes never. Do it now.", ar: "أحياناً كلمة لاحقاً تعني أبداً. افعلها الآن. ⏰"},
+            {en: "Great results take time. Be patient.", ar: "النتائج العظيمة تحتاج وقتاً. كن صبوراً. ⏳"},
+            {en: "Be the best version of yourself.", ar: "كن النسخة الأفضل من نفسك. ⭐"},
+            {en: "Your ambition is the fuel of your success.", ar: "طموحك هو وقود نجاحك. ⛽"},
+            {en: "Believe in yourself and anything is possible.", ar: "آمن بنفسك وكل شيء سيكون ممكناً. 🦁"},
+            {en: "Work in silence, let success be your noise.", ar: "اعمل في صمت، ودع نجاحك يحدث الضجيج. 🤫"},
+            {en: "If you can dream it, you can build it.", ar: "إذا كنت تستطيع حلمه، فأنت تستطيع بناءه. 🏗️"}
+        ];
+        let userQuotes = JSON.parse(localStorage.getItem('hamzaQuotes')) || [];
+
+     // 1. قائمة الـ 20 لون
+const colors = [
+    '#6a0dad', '#ff0000', '#00ff00', '#0000ff', '#ffff00', 
+    '#00ffff', '#ff00ff', '#ffa500', '#ffc0cb', '#8b4513',
+    '#7cfc00', '#20b2aa', '#ff1493', '#ffd700', '#40e0d0',
+    '#ff4500', '#adff2f', '#00ced1', '#ff69b4', '#ffffff'
+];
+
+// 2. توليد الدوائر وتفعيل علامة الصح
+const cp = document.getElementById('colorPicker');
+if (cp) {
+    cp.innerHTML = ''; // تنظيف أي دوائر قديمة عشان ما يتكرروا
+    colors.forEach((color, index) => {
+        const d = document.createElement('div');
+        d.className = 'color-dot';
+        
+        // لو هاد أول لون (البنفسجي)، حط عليه صح من البداية
+        if(index === 0) d.classList.add('selected');
+        
+        d.style.background = color;
+        
+        d.onclick = function() {
+            // شيل الصح من كل الدوائر
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.classList.remove('selected');
+            });
+            // حط الصح على الدائرة اللي انكبست
+            d.classList.add('selected');
+            // غير لون الموقع
+            document.documentElement.style.setProperty('--main-color', color);
+        };
+        cp.appendChild(d);
+    });
+    
+}
+
+function toggleAcc(e, header) {
+    if (e) e.stopPropagation();
+    // هاد السطر هو اللي بيخلي الـ CSS يشوف كلمة active ويفتح القائمة
+    header.parentElement.classList.toggle('active');
+}
+history.pushState({menuOpen: true}, ""); // هذا بيسجل خطوة للمتصفح
+
+        function toggleSidebar(e) { e.stopPropagation(); document.getElementById('sidebar').classList.toggle('active'); }
+
+        function toggleAcc(e, el) {
+            e.stopPropagation();
+            const isOpen = el.nextElementSibling.classList.contains('open');
+            document.querySelectorAll('.acc-content').forEach(c => c.classList.remove('open'));
+            document.querySelectorAll('.acc-header span').forEach(s => s.textContent = '+');
+            if(!isOpen) { el.nextElementSibling.classList.add('open'); el.querySelector('span').textContent = '-'; }
+        }
+
+        function handleGlobalClick() {
+            const openAcc = document.querySelector('.acc-content.open');
+            if(openAcc) {
+                openAcc.classList.remove('open');
+                document.querySelectorAll('.acc-header span').forEach(s => s.textContent = '+');
+            } else { document.getElementById('sidebar').classList.remove('active'); }
+            
+        }
+history.pushState({menuOpen: true}, ""); // هذا بيسجل خطوة للمتصفح
+       function changeFont(fontName, element) {
+    // 1. شيل الصح من الكل
+    document.querySelectorAll('.font-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+
+    // 2. حط صح على اللي كبسناه هلق
+    if (element) {
+        element.classList.add('selected');
+    }
+
+    // 3. غير الخط
+    document.documentElement.style.setProperty('--font-family', fontName);
+}
+
+        function addUserQuote() {
+            const en = document.getElementById('inEn').value.trim();
+            const ar = document.getElementById('inAr').value.trim();
+            const em = document.getElementById('inEmoji').value.trim();
+            
+            if(!en || !ar || !em) {
+                alert("شروط الإضافة: يجب كتابة النص الإنجليزي، العربي، والإيموجي! ✨");
+                return;
+            }
+            
+            userQuotes.push({ en, ar: ar + " " + em });
+            localStorage.setItem('hamzaQuotes', JSON.stringify(userQuotes));
+            renderUserQuotes();
+            document.getElementById('inEn').value = ''; document.getElementById('inAr').value = ''; document.getElementById('inEmoji').value = '';
+        }
+
+        function renderUserQuotes() {
+            const list = document.getElementById('userQuotesList');
+            list.innerHTML = '';
+            userQuotes.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'user-quote';
+                div.textContent = q.ar;
+
+                let timer;
+                // ضغطة وحدة للعرض
+                div.onclick = (e) => {
+                    e.stopPropagation();
+                    showQ(q);
+                    document.getElementById('sidebar').classList.remove('active');
+                };
+
+                // ضغطة طويلة للحذف
+                div.onmousedown = div.ontouchstart = (e) => {
+                    timer = setTimeout(() => {
+                        if(confirm("هل تريد حذف هذه العبارة؟ (OK للتأكيد)")) {
+                            userQuotes.splice(i, 1);
+                            localStorage.setItem('hamzaQuotes', JSON.stringify(userQuotes));
+                            renderUserQuotes();
+                        }
+                    }, 800);
+                };
+                div.onmouseup = div.ontouchend = () => clearTimeout(timer);
+
+                list.appendChild(div);
+            });
+        }
+
+        function showQ(q) {
+            const lamp = document.getElementById('lamp');
+            lamp.classList.add('on');
+            document.getElementById('enText').textContent = q.en;
+            document.getElementById('arText').textContent = q.ar;
+            document.getElementById('quoteBox').classList.add('visible');
+        }
+
+        function toggleLamp(e) {
+            e.stopPropagation();
+            const lamp = document.getElementById('lamp');
+            const box = document.getElementById('quoteBox');
+            lamp.classList.toggle('on');
+            if(lamp.classList.contains('on')) {
+                const all = [...defaultQuotes, ...userQuotes];
+                const r = all[Math.floor(Math.random() * all.length)];
+                document.getElementById('enText').textContent = r.en;
+                document.getElementById('arText').textContent = r.ar;
+                box.classList.add('visible');
+            } else { box.classList.remove('visible'); }
+        }
+
+        setInterval(() => {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 7000);
+        }, 600);
+
+        renderUserQuotes();
+       let canvas = document.getElementById('bgCanvas');
+let ctx = canvas.getContext('2d');
+let animationId;
+let particles = [];
+let currentType = 'none';
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function startEffect(type, element) {
+    // إدارة الصح
+    const btns = element.parentElement.querySelectorAll('.font-btn');
+    btns.forEach(b => b.classList.remove('selected'));
+    element.classList.add('selected');
+
+    // تنظيف القديم
+    cancelAnimationFrame(animationId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles = [];
+    currentType = type;
+
+    if (type === 'none') return;
+
+    // تقليل العدد أكتر عشان السلاسة (40 للابتوب و 20 للموبايل كافية جداً وتعطي منظر حلو)
+let count = (window.innerWidth < 600) ? 20 : 40;
+    
+    for(let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * (type === 'red-dots' ? 4 : 20) + 10,
+            speed: Math.random() * 2 + 0.5,
+            opacity: Math.random(),
+            velX: (Math.random() - 0.5) * 0.5 // حركة جانبية خفيفة
+        });
+    }
+    animate();
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    particles.forEach(p => {
+        if (currentType === 'red-dots') {
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size/5, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            // رسم الإيموجي أو النجوم
+            ctx.font = `${p.size}px serif`;
+            let emoji = '';
+            if (currentType === 'stars') emoji = '⭐';
+            if (currentType === 'snow') emoji = '❄️';
+            if (currentType === 'hearts') emoji = '❤️';
+            if (currentType === 'bubbles') emoji = '🫧';
+            
+            ctx.globalAlpha = p.opacity; // شفافية متغيرة للنجوم والفقاعات
+            ctx.fillText(emoji, p.x, p.y);
+        }
+
+        // تحريك الجزيئات
+        if (currentType === 'bubbles') {
+            p.y -= p.speed; // الفقاعات تطلع لفوق
+            if (p.y < -20) p.y = canvas.height + 20;
+        } else {
+            p.y += p.speed; // الباقي ينزل لتحت
+            p.x += p.velX; // حركة لليمين واليسار شوي
+            if (p.y > canvas.height + 20) p.y = -20;
+        }
+        
+        // إعادة التدوير من الجوانب
+        if (p.x > canvas.width) p.x = 0;
+        if (p.x < 0) p.x = canvas.width;
+    });
+
+    animationId = requestAnimationFrame(animate);
+}
+// حط جملك الـ 20 الأصلية هون مكان هدول عشان يرجعولك بالافتراضي
+const defaultOriginal = [
+     {en: "Success is not final, failure is not fatal.", ar: "النجاح ليس نهائياً، والفشل ليس قاتلاً. 🦅"},
+            {en: "Your limit is only your imagination.", ar: "حدودك هي فقط خيالك. 🌌"},
+            {en: "Push yourself, because no one else will do it.", ar: "ادفع نفسك، لأنه لن يفعل ذلك أحد غيرك. 💪"},
+            {en: "Great things never come from comfort zones.", ar: "الأشياء العظيمة لا تأتي من مناطق الراحة. 🏔️"},
+            {en: "Dream it. Wish it. Do it.", ar: "احلم به. تمنَّاه. نفذه. 🚀"},
+            {en: "Stay focused and never give up.", ar: "ابقَ مركزاً ولا تستسلم أبداً. 🎯"},
+            {en: "The harder you work, the luckier you get.", ar: "كلما عملت بجد، زاد حظك. 🍀"},
+            {en: "Don't stop when you're tired. Stop when you're done.", ar: "لا تتوقف عندما تتعب، توقف عندما تنتهي. 🔥"},
+            {en: "Wake up with determination. Go to bed with satisfaction.", ar: "استيقظ بعزيمة، ونم براضا. 🌅"},
+            {en: "Do something today that your future self will thank you for.", ar: "افعل شيئاً اليوم تشكرك عليه نفسك في المستقبل. ✨"},
+            {en: "Little things make big days.", ar: "الأشياء الصغيرة تصنع أياماً عظيمة. 🌱"},
+            {en: "It’s going to be hard, but hard does not mean impossible.", ar: "سيكون الأمر صعباً، لكن صعب لا تعني مستحيلاً. 💎"},
+            {en: "Don’t wait for opportunity. Create it.", ar: "لا تنتظر الفرصة، بل اصنعها بنفسك. 🛠️"},
+            {en: "Sometimes later becomes never. Do it now.", ar: "أحياناً كلمة لاحقاً تعني أبداً. افعلها الآن. ⏰"},
+            {en: "Great results take time. Be patient.", ar: "النتائج العظيمة تحتاج وقتاً. كن صبوراً. ⏳"},
+            {en: "Be the best version of yourself.", ar: "كن النسخة الأفضل من نفسك. ⭐"},
+            {en: "Your ambition is the fuel of your success.", ar: "طموحك هو وقود نجاحك. ⛽"},
+            {en: "Believe in yourself and anything is possible.", ar: "آمن بنفسك وكل شيء سيكون ممكناً. 🦁"},
+            {en: "Work in silence, let success be your noise.", ar: "اعمل في صمت، ودع نجاحك يحدث الضجيج. 🤫"},
+            {en: "If you can dream it, you can build it.", ar: "إذا كنت تستطيع حلمه، فأنت تستطيع بناءه. 🏗️"}
+            
+];
+
+const sadQuotes = [
+    {en: "Silence is pain.", ar: "الصمت ألم. 🖤"},
+    {en: "Broken heart.", ar: "قلب مكسور. 💔"},
+    {en: "I miss my old self.", ar: "أفتقد نفسي القديمة. 🥀"},
+    {en: "Memories hurt.", ar: "الذكريات تؤلم. 🕯️"},
+    {en: "Loneliness kills.", ar: "الوحدة تقتل. ⛓️"},
+    {en: "Tears are words.", ar: "الدموع كلمات. 🌊"},
+    {en: "Life is hard.", ar: "الحياة صعبة. 🥀"},
+    {en: "Lost in pain.", ar: "ضائع في الألم. 🌑"},
+    {en: "Farewell is hard.", ar: "الوداع صعب. ✨"},
+    {en: "Empty soul.", ar: "روح فارغة. 🌫️"}
+];
+
+const happyQuotes = [
+    {en: "Smile always.", ar: "ابتسم دائماً. 😊"},
+    {en: "Life is good.", ar: "الحياة حلوة. ✨"},
+    {en: "Stay positive.", ar: "خليك إيجابي. ☀️"},
+    {en: "Happy day.", ar: "يوم سعيد. 🌈"},
+    {en: "Dream big.", ar: "حلم كبير. ⭐"},
+    {en: "Be strong.", ar: "كن قوياً. 💪"},
+    {en: "Love yourself.", ar: "حب نفسك. ❤️"},
+    {en: "Success is near.", ar: "النجاح قريب. 🎯"},
+    {en: "Peace of mind.", ar: "راحة بال. 🕊️"},
+    {en: "Keep going.", ar: "استمر. 🚀"}
+];
+const pride = [
+    { en: "I am not compared to others, I am like no one.", ar: "أنا لا أُقارن بغيري، أنا لستُ كأحد. 👑"},
+    { en: "Storms don't defeat roots.", ar: "العواصف لا تهزم الجذور. 🌱" },
+    { en: "I don't see those who don't see me.", ar: "من لا يراني، لا أراه.  👞" },
+    { en: "My dignity is a red line.", ar: "كرامتي خط أحمر.  🚫" },
+    { en: "I am the summit.", ar: "أنا القمة.  🏔️" },
+    { en: "Self-confidence is my army.", ar: "الثقة بالنفس هي جيشي.  🛡️" },
+    { en: "I know who I am.", ar: "أنا أعرف من أكون.  ✨" },
+    { en: "Be silent until your pride speaks.", ar: "اصمت حتى يتكلم كبرياؤك.  🤫" },
+    { en: "Prestige is born in the veins.", ar: "الهيبة تولد في العروق.  🦁" },
+    { en: "I am the master of my decision.", ar: "أنا سيد قراري.  👑" }
+];
+const hopePhrases = [
+    {en:"Peace starts with a smile.",ar:"السلام يبدأ بابتسامة. 😊"},
+    {en:"Everything happens for a reason.",ar:"كل شيء يحدث لسبب. 🌱"},
+    {en:"After every storm comes a rainbow.",ar:"بعد كل عاصفة يأتي قوس قزح. 🌈"},
+    {en:"Trust the process.",ar:"ثق بالمسار. ⚓"},
+    {en:"The best is yet to come.",ar:"الأجمل لم يأتِ بعد. ✨"},
+    {en:"Keep your heart strong.",ar:"حافظ على قوة قلبك. ❤️"},
+    {en:"Good things take time.",ar:"الأشياء الجميلة تستغرق وقتاً. ⏳"},
+    {en:"Don't lose hope.",ar:"لا تفقد الأمل. 🕯️"},
+    {en:"Your soul is a masterpiece.",ar:"روحك هي لوحة فنية. 💎"},
+    {en:"Be patient, life will get better.",ar:"كن صبوراً، فالحياة ستصبح أفضل. 🕊️"}
+];
+
+function changeMood(mood, btn) {
+    // 1. قصة علامة الصح وتغيير اللون (شغالة تمام)
+    document.querySelectorAll('.cat-btn').forEach(b => {
+        b.style.backgroundColor = ""; 
+        b.innerHTML = b.innerHTML.replace(' ✓', ''); 
+    });
+
+    btn.style.backgroundColor = "#4caf50"; 
+    btn.innerHTML += ' ✓';
+
+    // 2. التبديل الذكي بدون ريفريش
+    if (mood === 'sad') {
+        defaultQuotes.splice(0, defaultQuotes.length, ...sadQuotes);
+    } else if (mood === 'happy') {
+        defaultQuotes.splice(0, defaultQuotes.length, ...happyQuotes);
+    } 
+    else if (mood === 'pride') {
+        defaultQuotes.splice(0, defaultQuotes.length, ...pride);
+    } 
+     else if (mood === 'hopePhrases') {
+        defaultQuotes.splice(0, defaultQuotes.length, ...hopePhrases);
+    } 
+    else if (mood === 'default') {
+        // هون السر: بدل الـ reload بنرجع المصفوفة الأصلية
+        defaultQuotes.splice(0, defaultQuotes.length, ...defaultOriginal);
+    }
+}
+// هاد الكود بيشتغل لحاله أول ما تفتح الصفحة
+window.onload = function() {
+    // بندور على الزر اللي مكتوب فيه "الافتراضي"
+    const defaultBtn = Array.from(document.querySelectorAll('.cat-btn'))
+                            .find(btn => btn.innerText.includes('الافتراضي'));
+    
+    if (defaultBtn) {
+        // بنخليه ينكبس لحاله عشان تطلع علامة الصح واللون
+        changeMood('default', defaultBtn);
+    }
+};
+document.addEventListener('click', function (e) {
+    let box = e.target.closest('.content');
+    
+    if (box) {
+        let text = box.innerText.trim();
+        
+        if (text.length > 0) {
+            navigator.clipboard.writeText(text).then(() => {
+                let toast = document.getElementById('toast-msg') || document.createElement('div');
+                toast.id = 'toast-msg';
+                toast.innerText = '✅ تم النسخ';
+                // هون التعديل: خليناها bottom بدل top ونزلناها لتحت
+                toast.style = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:white; color:black; padding:8px 15px; border-radius:10px; z-index:10000; font-weight:bold; box-shadow:0 2px 10px rgba(0,0,0,0.2);";
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 1000);
+                
+                box.style.opacity = '0.5';
+                setTimeout(() => { box.style.opacity = '1'; }, 100);
+            });
+        }
+    }
+});
+// 1. إنشاء الرسالة بستايل ناعم وصغير
+const hint = document.createElement('div');
+hint.id = 'manual-hint';
+// قللنا الكلمات وصغرنا الخط
+hint.innerHTML = `
+    <div style="color: #888; opacity: 0.5; text-align: center; font-size: 13px; letter-spacing: 0.5px;">
+        اضغط على العبارة لنسخها
+    </div>
+`;
+
+// تنسيق الموقع (بنص الشاشة بدون خلفية سوداء عشان تكون "غامضة")
+Object.assign(hint.style, {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '99999',
+    transition: 'opacity 0.5s ease',
+    pointerEvents: 'none' // عشان ما يغطي على الكبسات اللي تحته
+});
+
+document.body.appendChild(hint);
+
+// 2. الإخفاء عند أي لمسة بالموقع
+const hideHint = () => {
+    hint.style.opacity = '0';
+    setTimeout(() => hint.remove(), 500);
+};
+
+document.addEventListener('mousedown', hideHint, { once: true });
+document.addEventListener('touchstart', hideHint, { once: true });
+
+    </script>
+    <div id="smart-guide" style="
+    position: absolute;
+    color: rgba(255, 255, 255, 0.6); /* أبيض بعتامة (شفافية) */
+    font-weight: bold;
+    font-size: 13px;
+    z-index: 99999;
+    pointer-events: none; /* عشان الكبسة تمر للمصباح */
+    white-space: nowrap;
+    display: none; /* رح يظهر بس لما نلاقي المصباح */
+">
+    ➡️ اضغط click 
+</div>
+
+<script>
+(function() {
+    function attachGuide() {
+        const lamp = document.querySelector('[onclick*="toggleLamp"]');
+        const guide = document.getElementById('smart-guide');
+        // تأكد من وضع ID القائمة الصحيح هنا، غالباً يكون 'menu' أو 'sidebar'
+        // سأفترض أن القائمة عندك لها كلاس أو ID معين، لنراقب الـ Body إذا تغيرت الحالة
+        const menu = document.querySelector('.menu, #menu, .sidebar'); 
+
+        if (lamp && guide) {
+            function updatePos() {
+                const rect = lamp.getBoundingClientRect();
+                guide.style.left = (window.scrollX + rect.left - 130) + 'px';
+                guide.style.top = (window.scrollY + rect.top + (rect.height / 2) - 10) + 'px';
+                
+                // شرط إضافي: إذا القائمة مفتوحة، لا تظهر الجملة
+                if (menu && (menu.classList.contains('active') || menu.style.display === 'block')) {
+                    guide.style.opacity = '0';
+                } else {
+                    guide.style.display = 'block';
+                    guide.style.opacity = '1';
+                }
+            }
+
+            updatePos();
+            window.addEventListener('resize', updatePos);
+            window.addEventListener('scroll', updatePos);
+
+            // مراقبة القائمة: إذا انفتحت القائمة نخفي الجملة
+            const observer = new MutationObserver(() => {
+                // إذا تغير أي شيء في القائمة (انفتحت/تسكرت) بنحدث وضع الجملة
+                updatePos();
+            });
+
+            if (menu) observer.observe(menu, { attributes: true, style: true });
+
+            lamp.addEventListener('click', function() {
+                guide.remove();
+                observer.disconnect(); // توقف عن المراقبة بعد الحذف
+            });
+        }
+    }
+
+    if (document.readyState === 'complete') attachGuide();
+    else window.addEventListener('load', attachGuide);
+})();
+
+</script>
+<script>
+/* كود الإنقاذ النهائي - حمزة */
+
+// 1. تفعيل زر الرجوع للموبايل
+// أول ما تفتح القائمة، المتصفح رح يحس
+const observerMenu = new MutationObserver(() => {
+    const menu = document.getElementById('sidebar');
+    if (menu && menu.classList.contains('active')) {
+        if (!window.history.state || !window.history.state.menuOpen) {
+            history.pushState({menuOpen: true}, "");
+        }
+    }
+});
+const targetMenu = document.getElementById('sidebar');
+if(targetMenu) observerMenu.observe(targetMenu, { attributes: true, attributeFilter: ['class'] });
+
+window.onpopstate = function(event) {
+    const menu = document.getElementById('sidebar');
+    if (menu && menu.classList.contains('active')) {
+        // إذا كبست رجوع والقائمة مفتوحة.. سكرها
+        menu.classList.remove('active');
+        const overlay = document.querySelector('.overlay');
+        if(overlay) overlay.style.display = 'none';
+    }
+};
+
+</script>
+<script>
+// كود "حمزة" النهائي - شغال على كل الموبايلات غصب عن الكل
+(function() {
+    // 1. وظيفة النسخ اللي الموبايل ما بيقدر يرفضها
+    function forceCopyText() {
+        // جلب النصوص من العناصر بملفك
+        const en = document.querySelector('.en') ? document.querySelector('.en').innerText : "";
+        const ar = document.querySelector('.ar') ? document.querySelector('.ar').innerText : "";
+        const text = en + "\n" + ar;
+
+        const input = document.createElement('textarea');
+        input.value = text;
+        document.body.appendChild(input);
+        
+        // أهم سطرين للموبايل
+        input.select();
+        input.setSelectionRange(0, 99999); 
+        
+        try {
+            document.execCommand('copy');
+            // تنبيه يظهر فوق كل شي
+            const toast = document.createElement('div');
+            toast.innerHTML = "تم النسخ بنجاح ✅";
+            toast.style = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#6a0dad; color:white; padding:15px 30px; border-radius:50px; z-index:999999; font-weight:bold; box-shadow:0 10px 30px rgba(0,0,0,0.5);";
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        } catch (err) {
+            alert("استخدم متصفح كروم للنسخ");
+        }
+        document.body.removeChild(input);
+    }
+
+    // 2. تفعيل منطقة اللمس غصب عن الـ CSS
+    const checkArea = setInterval(() => {
+        const area = document.querySelector('.quote-box');
+        if (area) {
+            area.style.pointerEvents = 'auto'; // كسر الحماية
+            area.style.cursor = 'pointer';
+            
+            // مستمع للكمبيوتر
+            area.onclick = forceCopyText;
+            
+            // مستمع للموبايل (لمس حقيقي)
+            area.addEventListener('touchstart', function(e) {
+                forceCopyText();
+            }, {passive: true});
+            
+            clearInterval(checkArea); // توقف عن البحث بمجرد التفعيل
+        }
+    }, 500);
+})();
+</script>
+
+</body>
+</html>
